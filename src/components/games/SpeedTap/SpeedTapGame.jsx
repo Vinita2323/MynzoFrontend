@@ -1,0 +1,95 @@
+import React, { useState } from 'react';
+import { motion, AnimatePresence } from 'framer-motion';
+import IntroScreen from './IntroScreen';
+import CountdownScreen from './CountdownScreen';
+import GameplayScreen from './GameplayScreen';
+import ResultScreen from './ResultScreen';
+import RewardsScreen from './RewardsScreen';
+import LeaderboardScreen from './LeaderboardScreen';
+
+export default function SpeedTapGame({ onClose, addCoins }) {
+  const [gameState, setGameState] = useState('intro'); // intro, countdown, playing, result, rewards, leaderboard
+  const [score, setScore] = useState(0);
+  const [bestScore, setBestScore] = useState(parseInt(localStorage.getItem('speedTapBest')) || 0);
+  
+  const startGame = () => {
+    setScore(0);
+    setGameState('countdown');
+  };
+
+  const onCountdownEnd = () => {
+    setGameState('playing');
+  };
+
+  const onGameEnd = (finalScore) => {
+    setScore(finalScore);
+    if (finalScore > bestScore) {
+      setBestScore(finalScore);
+      localStorage.setItem('speedTapBest', finalScore.toString());
+    }
+    setGameState('result');
+  };
+
+  const claimReward = (amount) => {
+    addCoins(amount);
+  };
+
+  return (
+    <div className="fixed inset-0 z-[100] bg-[#071226] text-white flex flex-col overflow-hidden">
+      <AnimatePresence mode="wait">
+        {gameState === 'intro' && (
+          <IntroScreen 
+            key="intro" 
+            bestScore={bestScore} 
+            onStart={startGame} 
+            onClose={onClose}
+            onViewRewards={() => setGameState('rewards')}
+            onViewLeaderboard={() => setGameState('leaderboard')}
+          />
+        )}
+        
+        {gameState === 'countdown' && (
+          <CountdownScreen 
+            key="countdown" 
+            onComplete={onCountdownEnd} 
+          />
+        )}
+        
+        {gameState === 'playing' && (
+          <GameplayScreen 
+            key="playing" 
+            onGameEnd={onGameEnd} 
+          />
+        )}
+        
+        {gameState === 'result' && (
+          <ResultScreen 
+            key="result" 
+            score={score} 
+            bestScore={bestScore} 
+            onPlayAgain={startGame} 
+            onClose={onClose}
+            claimReward={claimReward}
+            onViewRewards={() => setGameState('rewards')}
+          />
+        )}
+        
+        {gameState === 'rewards' && (
+          <RewardsScreen 
+            key="rewards" 
+            bestScore={bestScore}
+            onBack={() => setGameState('intro')}
+          />
+        )}
+        
+        {gameState === 'leaderboard' && (
+          <LeaderboardScreen 
+            key="leaderboard" 
+            bestScore={bestScore}
+            onBack={() => setGameState('intro')}
+          />
+        )}
+      </AnimatePresence>
+    </div>
+  );
+}
