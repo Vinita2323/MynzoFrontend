@@ -1,0 +1,53 @@
+@import "tailwindcss";
+
+@theme {
+  --color-orange-50: #fff5f2;
+  --color-orange-100: #ffe5de;
+  --color-orange-200: #ffcabd;
+  --color-orange-300: #ffa592;
+  --color-orange-400: #ff876f;
+  --color-orange-500: #ee4923;
+  --color-orange-600: #e64c33;
+  --color-orange-700: #b83420;
+}
+
+/* Force Nunito across all visual components, buttons, fields, and text elements */
+* {
+  font-family: 'Nunito', -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif !important;
+  /* Prevent tap highlight color on mobile */
+  -webkit-tap-highlight-color: transparent;
+}
+
+/* Global native app behaviors */
+body {
+  /* Disable text selection */
+  -webkit-user-select: none;
+  user-select: none;
+  
+  /* Disable callout menus on iOS */
+  -webkit-touch-callout: none;
+  
+  /* Prevent pinch-to-zoom and double-tap zoom (allows scrolling) */
+  touch-action: pan-x pan-y;
+}
+
+/* Re-enable text selection for form inputs */
+input, textarea, select {
+  -webkit-user-select: auto;
+  user-select: auto;
+}
+
+.nunito-heading {
+  font-family: "Nunito", sans-serif !important;
+  font-optical-sizing: auto;
+  font-style: normal;
+}
+
+/* Hide scrollbar universally */
+.scrollbar-none::-webkit-scrollbar {
+  display: none;
+}
+.scrollbar-none {
+  -ms-overflow-style: none;  /* IE and Edge */
+  scrollbar-width: none;  /* Firefox */
+}
